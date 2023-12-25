@@ -93,7 +93,8 @@ public class AdminPrivilegesService {
         return false;
     }
 
-    private static Standard getStandard(String standard){
+
+    public static Standard getStandard(String standard){
         switch (standard){
             case "FAMILY" -> {
                 return Standard.FAMILY;

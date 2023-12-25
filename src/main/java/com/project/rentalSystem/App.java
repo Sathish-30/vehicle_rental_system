@@ -31,19 +31,26 @@ public class App
             System.out.print("Enter password : ");
             String password = in.next();
             if (n == 1) {
-                if(signUp(email , password)){
+                System.out.print("Enter the amount to add into wallet : ");
+                long amount = in.nextLong();
+                if(signUp(email , password, amount)){
                     System.out.println();
                     System.out.print("---------------------------------------------------------------------------- \n");
                     System.out.println("User Signed Up");
                     System.out.println("---------------------------------------------------------------------------- \n");
+                    User user = new User(email , password , amount);
+                    userOperations(user);
                 }
-                User user = new User(email , password);
             } else if (n == 2) {
                 User user = new User(email , password);
                 System.out.println();
+                boolean res = user.login(email, password);
                 System.out.print("---------------------------------------------------------------------------- \n");
-                System.out.println(user.login(email, password) ? "User signed In" : "Invalid credentials");
+                System.out.println( res ? "User signed In" : "Invalid credentials");
                 System.out.println("---------------------------------------------------------------------------- \n");
+                if(res) {
+                    userOperations(user);
+                }
             } else if (n == 3) {
                 Admin admin = new Admin(email , password);
                 System.out.println();
@@ -114,6 +121,49 @@ public class App
         }
         in.close();
         closeConnection();
+    }
+
+    private static void userOperations(User user){
+        Scanner in = new Scanner(System.in);
+        while(true){
+            System.out.println("1. View All Vehicles");
+            System.out.println("2. Select Vehicle by name and Add to cart");
+            System.out.println("3. Select Vehicle by Id and Add to cart");
+            System.out.println("4. View vehicles in the Cart");
+            System.out.println("5. Delete vehicle using Id from the Cart");
+            System.out.println("6. Rent a Vehicle , with minimum security deposit");
+            System.out.println("7. Exit");
+            System.out.print("Enter the operation number to perform specific Task : ");
+            int userOperation = in.nextInt();
+            if(userOperation == 7){
+                break;
+            }else if(userOperation == 1){
+                User.getListOfVehicle();
+            }else if(userOperation == 2){
+                System.out.print("Enter the name of the vehicle to be Selected : ");
+                String vehicleName = in.next();
+                user.addVehicleToCartBySelectingVehicleByName(vehicleName);
+            }else if(userOperation == 3){
+                System.out.print("Enter the Id of the vehicle to be Selected : ");
+                int vehicleId = in.nextInt();
+                user.addVehicleToCartBySelectingVehicleById(vehicleId);
+            }else if(userOperation == 4){
+                user.getListOfVehiclesInCart();
+            }else if(userOperation == 5){
+                System.out.print("Enter the Vehicle Id to delete : ");
+                int vehId = in.nextInt();
+                user.deleteVehicleFromCart(vehId);
+            }else if(userOperation == 6){
+                User.getListOfVehicle();
+                System.out.println("Enter the Id of the vehicle to Rent it: ");
+                int vehicleId = in.nextInt();
+                if(user.checkVehicleWithId(vehicleId)){
+                    user.rentVehicle(vehicleId);
+                    user.deleteVehicleFromCart(vehicleId);
+                }
+            }
+        }
+        in.close();
     }
 
     private static int getSafetyId(Standard standard, char vehicleType) {

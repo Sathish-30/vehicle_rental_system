@@ -18,15 +18,7 @@ public class Vehicle {
 
     @Override
     public String toString() {
-        return "Vehicle{" +
-                "vehicleName='" + vehicleName + '\'' +
-                ", numberPlate='" + numberPlate + '\'' +
-                ", vehicleType='" + vehicleType + '\'' +
-                ", isAvailable=" + isAvailable +
-                ", standard=" + standard +
-                ", safetyId=" + safetyId +
-                ", rentalCharge=" + rentalCharge +
-                '}';
+        return String.format("Vehicle_id : %d , Vehicle_name : %s , Number_plate : %s , Vehicle_type : %c , isAvailable : %b",vehicleId,vehicleName,numberPlate,vehicleType,isAvailable);
     }
 
     public Vehicle(String vehicleName, String numberPlate, Character vehicleType, Boolean isAvailable, Standard standard, Integer safetyId,  Integer rentalCharge

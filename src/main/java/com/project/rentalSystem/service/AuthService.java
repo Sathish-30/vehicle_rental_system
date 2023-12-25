@@ -39,7 +39,7 @@ public class AuthService {
         return false;
     }
 
-    public static boolean signUpUser(String email , String password){
+    public static boolean signUpUser(String email , String password , long amount){
         String query = addUserQuery();
         Optional<PreparedStatement> optionalPreparedStatement = getPreparedStatement(query);
 
@@ -47,6 +47,7 @@ public class AuthService {
             try(PreparedStatement preparedStatement = optionalPreparedStatement.get()){
                 preparedStatement.setString(1, email);
                 preparedStatement.setString(2, password);
+                preparedStatement.setLong(3 , amount);
                 preparedStatement.execute();
                 return true;
             } catch (SQLException se) {

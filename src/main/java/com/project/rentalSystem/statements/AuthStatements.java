@@ -2,7 +2,7 @@ package com.project.rentalSystem.statements;
 
 public class AuthStatements {
     public static String addUserQuery(){
-        return "INSERT INTO user(email_id , password) VALUES(? , ?)";
+        return "INSERT INTO user(email_id , password , amount) VALUES(? , ? , ?)";
     }
 
     public static String userLoginQuery(){
