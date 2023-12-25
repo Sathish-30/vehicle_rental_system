@@ -6,7 +6,7 @@ public class Vehicle {
     private Integer vehicleId;
     private String vehicleName;
     private String numberPlate;
-    private String vehicleType;
+    private Character vehicleType;
     private Boolean isAvailable;
     private Date rentedDate;
     private Date checkedOutDate;
@@ -16,16 +16,46 @@ public class Vehicle {
     private Integer rentalCharge;
     private Integer serviceId;
 
-    public Vehicle(String vehicleName, String numberPlate, String vehicleType, Boolean isAvailable, Standard standard, Integer safetyId, Integer distanceDriven, Integer rentalCharge) {
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "vehicleName='" + vehicleName + '\'' +
+                ", numberPlate='" + numberPlate + '\'' +
+                ", vehicleType='" + vehicleType + '\'' +
+                ", isAvailable=" + isAvailable +
+                ", standard=" + standard +
+                ", safetyId=" + safetyId +
+                ", rentalCharge=" + rentalCharge +
+                '}';
+    }
+
+    public Vehicle(String vehicleName, String numberPlate, Character vehicleType, Boolean isAvailable, Standard standard, Integer safetyId,  Integer rentalCharge
+    ) {
         this.vehicleName = vehicleName;
         this.numberPlate = numberPlate;
         this.vehicleType = vehicleType;
         this.isAvailable = isAvailable;
         this.standard = standard;
         this.safetyId = safetyId;
-        this.distanceDriven = distanceDriven;
         this.rentalCharge = rentalCharge;
     }
+
+    public Vehicle(Integer vehicleId, String vehicleName, String numberPlate, Character vehicleType, Boolean isAvailable, Date rentedDate, Date checkedOutDate, Standard standard, Integer safetyId, Integer distanceDriven, Integer rentalCharge, Integer serviceId) {
+        this.vehicleId = vehicleId;
+        this.vehicleName = vehicleName;
+        this.numberPlate = numberPlate;
+        this.vehicleType = vehicleType;
+        this.isAvailable = isAvailable;
+        this.rentedDate = rentedDate;
+        this.checkedOutDate = checkedOutDate;
+        this.standard = standard;
+        this.safetyId = safetyId;
+        this.distanceDriven = distanceDriven;
+        this.rentalCharge = rentalCharge;
+        this.serviceId = serviceId;
+    }
+
+    //    The Below all are getters and setters
 
     public Integer getVehicleId() {
         return vehicleId;
@@ -51,11 +81,11 @@ public class Vehicle {
         this.numberPlate = numberPlate;
     }
 
-    public String getVehicleType() {
+    public Character getVehicleType() {
         return vehicleType;
     }
 
-    public void setVehicleType(String vehicleType) {
+    public void setVehicleType(Character vehicleType) {
         this.vehicleType = vehicleType;
     }
 
@@ -122,4 +152,10 @@ public class Vehicle {
     public void setServiceId(Integer serviceId) {
         this.serviceId = serviceId;
     }
+
+
+    // The above all are getters and setters
+
+
+
 }

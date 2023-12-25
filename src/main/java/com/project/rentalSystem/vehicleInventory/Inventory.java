@@ -6,6 +6,9 @@ import com.project.rentalSystem.model.Vehicle;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.project.rentalSystem.service.AdminPrivilegesService.addVehicleToInventoryByAdmin;
+import static com.project.rentalSystem.service.AdminPrivilegesService.getAllVehicleByAdmin;
+
 public class Inventory {
     private static List<Vehicle> vehicles;
     private static List<User> users;
@@ -21,12 +24,11 @@ public class Inventory {
 
     public static void addVehicleToInventory(Vehicle vehicle){
         vehicles.add(vehicle);
-        System.out.println("---------------------------------------------------------------------------- \n");
-        System.out.println("Vehicle added to the inventory");
-        System.out.println("---------------------------------------------------------------------------- \n");
+        addVehicleToInventoryByAdmin(vehicle);
     }
 
     public static List<Vehicle> getVehicles(){
+        vehicles =  getAllVehicleByAdmin();
         return vehicles;
     }
 }

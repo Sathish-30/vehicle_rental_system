@@ -1,4 +1,4 @@
-package com.project.rentalSystem.controller;
+package com.project.rentalSystem.service;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import static com.project.rentalSystem.dbConnection.DBConnection.getPreparedStatement;
 import static com.project.rentalSystem.statements.AuthStatements.*;
-public class AuthController {
+public class AuthService {
     public static boolean userLogin(String email , String password){
         String query = userLoginQuery();
         Optional<PreparedStatement> optionalPreparedStatement = getPreparedStatement(query);

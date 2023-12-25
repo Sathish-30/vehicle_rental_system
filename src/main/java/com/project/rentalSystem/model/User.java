@@ -1,10 +1,9 @@
 package com.project.rentalSystem.model;
 import com.project.rentalSystem.authentication.Auth;
-import com.project.rentalSystem.controller.AuthController;
 
 import java.util.ArrayList;
 
-import static com.project.rentalSystem.controller.AuthController.*;
+import static com.project.rentalSystem.service.AuthService.*;
 
 public class User implements Auth {
     private Integer user_id;
