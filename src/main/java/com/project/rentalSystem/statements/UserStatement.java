@@ -10,7 +10,7 @@ public class UserStatement {
     }
 
     public static String RentVehicle(){
-        return "Update user Set rented_vehicle = ? , rented_date = GETDATE() WHERE user_id = ?";
+        return "Update user Set rented_vehicle = ? , rented_date = CURDATE() WHERE user_id = ? AND rented_vehicle IS NULL";
     }
 
     public static String getVehicleUsingVehicleId(){
@@ -30,7 +30,7 @@ public class UserStatement {
     }
 
     public static String getAllVehicleFromCart(){
-        return "SELECT Vehicle.* FROM vehicle_cart Cart inner join vehicle Vehicle on Cart.vehicle_id = Vehicle.vehicle_id WHERE Cart.user_id = ?";
+        return "SELECT DISTINCT Vehicle.* FROM vehicle_cart Cart inner join vehicle Vehicle on Cart.vehicle_id = Vehicle.vehicle_id WHERE Cart.user_id = ?";
     }
 
     public static String deleteVehicleFromCartQuery() {
@@ -47,5 +47,13 @@ public class UserStatement {
 
     public static String updatePriceAmountOfUser(){
         return "Update user SET amount = amount - ? WHERE user_id = ?";
+    }
+
+    public static String getAmountOfTheUserByUserId() {
+        return "SELECT amount from user WHERE user_id = ?";
+    }
+
+    public static String setAmountForUserQuery() {
+        return "UPDATE User set amount = amount + ? WHERE user_id = ?";
     }
 }

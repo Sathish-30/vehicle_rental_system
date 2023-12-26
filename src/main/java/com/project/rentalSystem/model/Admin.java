@@ -2,6 +2,8 @@ package com.project.rentalSystem.model;
 
 import com.project.rentalSystem.authentication.Auth;
 import com.project.rentalSystem.service.AdminPrivilegesService;
+import com.project.rentalSystem.vehicleInventory.Inventory;
+
 import java.util.List;
 import java.util.Optional;
 import static com.project.rentalSystem.service.AuthService.adminLogin;
@@ -39,12 +41,14 @@ public class Admin implements Auth {
         return adminLogin(emailId , password);
     }
 
+    // Add Vehicle to The DB
     public static void addVehicle(String vehicleName ,String numberPlate ,Character vehicleType ,Boolean isAvailable ,Standard standard ,Integer safetyId ,Integer rentalCharge){
         Vehicle vehicle = new Vehicle(vehicleName , numberPlate , vehicleType , isAvailable , standard , safetyId , rentalCharge );
 //        System.out.println(vehicle);
-        addVehicleToInventory(vehicle);
+        Inventory.addVehicleToInventory(vehicle);
     }
 
+    // Get All Vehicle from The DB;
     public static void getAllVehicle(){
         List<Vehicle> vehicles = getVehicles();
         System.out.println();
@@ -57,6 +61,7 @@ public class Admin implements Auth {
         System.out.println("---------------------------------------------------------------------------- \n");
     }
 
+    // Search Vehicle By Name
     public static void searchVehicleByName(String vehicleName){
         Optional<Vehicle> vehicle = AdminPrivilegesService.searchVehicleByName(vehicleName);
         System.out.println();
@@ -65,13 +70,7 @@ public class Admin implements Auth {
         System.out.println("---------------------------------------------------------------------------- \n");
     }
 
-    public static void changeSecurityDeposit(Integer securityId , Integer updatedAmount){
-        System.out.println();
-        System.out.print("---------------------------------------------------------------------------- \n");
-        System.out.println(AdminPrivilegesService.changeSecurityAmount(securityId , updatedAmount) ? "Security Deposit is updated" : "Couldn't Able to Update the Security Deposit");
-        System.out.println("---------------------------------------------------------------------------- \n");
-    }
-
+    // Search vehicle by Number plate
     public static void searchVehicleByNumberPlate(String numberPlate){
         Optional<Vehicle> vehicle = AdminPrivilegesService.searchVehicleByNumberPlate(numberPlate);
         System.out.println();
@@ -79,5 +78,14 @@ public class Admin implements Auth {
         System.out.println(vehicle.map(value -> ("Vehicle Found : " + value)).orElseGet(() -> ("There is no vehicle in inventory with number plate " + numberPlate)));
         System.out.println("---------------------------------------------------------------------------- \n");
     }
+
+    // Change the security deposit amount of the Vehicle
+    public static void changeSecurityDeposit(Integer securityId , Integer updatedAmount){
+        System.out.println();
+        System.out.print("---------------------------------------------------------------------------- \n");
+        System.out.println(AdminPrivilegesService.changeSecurityAmount(securityId , updatedAmount) ? "Security Deposit is updated" : "Couldn't Able to Update the Security Deposit");
+        System.out.println("---------------------------------------------------------------------------- \n");
+    }
+
 }
 

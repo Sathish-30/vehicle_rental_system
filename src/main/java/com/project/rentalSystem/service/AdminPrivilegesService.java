@@ -14,6 +14,8 @@ import static com.project.rentalSystem.statements.InventoryStatement.*;
 import static com.project.rentalSystem.vehicleInventory.Inventory.getVehicles;
 
 public class AdminPrivilegesService {
+
+    // The Below lines of code adds the Vehicle to the Database , Where it comes under the Admin-privileges
     public static void addVehicleToInventoryByAdmin(Vehicle vehicle){
         String query = addVehicleQuery();
         Optional<PreparedStatement> optionalPreparedStatement = getPreparedStatement(query);
@@ -36,6 +38,8 @@ public class AdminPrivilegesService {
             }
         }
     }
+
+    // The Below lines of code retrieve the Vehicles from the Database , Where it comes under the Admin-privileges
     public static List<Vehicle> getAllVehicleByAdmin(){
         List<Vehicle> vehicles = new ArrayList<>();
         String query = getAllVehicleQuery();
@@ -67,16 +71,19 @@ public class AdminPrivilegesService {
         return vehicles;
     }
 
+    // The Below line of code is to Search a vehicle by VehicleName , If (present) -> return the Vehicle else return Optional of null
     public static Optional<Vehicle> searchVehicleByName(String vehicleName){
         List<Vehicle> vehicles = getVehicles().stream().filter(e -> e.getVehicleName().equals(vehicleName)).toList();
         return Optional.ofNullable(vehicles.isEmpty() ? null : vehicles.get(0));
     }
 
+    // The Below line of code is to Search a vehicle by numberPlate , If (present) -> return the Vehicle else return Optional of null
     public static Optional<Vehicle> searchVehicleByNumberPlate(String numberPlate){
         List<Vehicle> vehicles = getVehicles().stream().filter(e -> e.getNumberPlate().equals(numberPlate)).toList();
         return Optional.ofNullable(vehicles.isEmpty() ? null : vehicles.get(0));
     }
 
+    // The Below line of code is to change the security deposit of the vehicle with the corresponding standards
     public static boolean changeSecurityAmount(Integer securityId , Integer amount){
         String query =  updateSecurityAmountQuery();
         Optional<PreparedStatement> optionalPreparedStatement = getPreparedStatement(query);
@@ -94,6 +101,7 @@ public class AdminPrivilegesService {
     }
 
 
+    // It returns the Standard enum , By checking its String value;
     public static Standard getStandard(String standard){
         switch (standard){
             case "FAMILY" -> {

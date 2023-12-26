@@ -132,10 +132,11 @@ public class App
             System.out.println("4. View vehicles in the Cart");
             System.out.println("5. Delete vehicle using Id from the Cart");
             System.out.println("6. Rent a Vehicle , with minimum security deposit");
-            System.out.println("7. Exit");
+            System.out.println("7. Add amount to the user wallet");
+            System.out.println("8. Exit");
             System.out.print("Enter the operation number to perform specific Task : ");
             int userOperation = in.nextInt();
-            if(userOperation == 7){
+            if(userOperation == 8){
                 break;
             }else if(userOperation == 1){
                 User.getListOfVehicle();
@@ -155,12 +156,16 @@ public class App
                 user.deleteVehicleFromCart(vehId);
             }else if(userOperation == 6){
                 User.getListOfVehicle();
-                System.out.println("Enter the Id of the vehicle to Rent it: ");
+                System.out.print("Enter the Id of the vehicle to Rent it : ");
                 int vehicleId = in.nextInt();
                 if(user.checkVehicleWithId(vehicleId)){
                     user.rentVehicle(vehicleId);
-                    user.deleteVehicleFromCart(vehicleId);
+//                    user.deleteVehicleFromCart(vehicleId);
                 }
+            }else if(userOperation == 7){
+                System.out.print("Enter the amount to be added for the user in their wallet : ");
+                Long updatedAmount = in.nextLong();
+                user.addAmount(updatedAmount);
             }
         }
         in.close();

@@ -1,6 +1,5 @@
 package com.project.rentalSystem.service;
 
-import com.project.rentalSystem.model.User;
 import com.project.rentalSystem.model.Vehicle;
 import com.project.rentalSystem.statements.UserStatement;
 import java.sql.Date;
@@ -199,7 +198,8 @@ public class UserService {
         return Optional.empty();
     }
 
-    private static boolean vehicleIsAvailable(Integer vehicleId){
+    // The below line of code is to check whether the vehicle is available or not
+    public static boolean vehicleIsAvailable(Integer vehicleId){
         String query = UserStatement.checkVehicleAvailable();
         boolean res = false;
         Optional<PreparedStatement> optionalPreparedStatement = getPreparedStatement(query);
@@ -209,39 +209,38 @@ public class UserService {
                 ResultSet rs = preparedStatement.executeQuery();
                 rs.next();
                 res = rs.getBoolean(1);
+                System.out.println("The Vehicle present or not : "+res);
+                return res;
             }catch(SQLException se){
                 System.out.println(se.getMessage());
             }
         }
-        return res;
+        return false;
     }
 
-    public static void rentTheVehicle(Vehicle vehicle, String emailId) {
-        // Checking whether the vehicle is Available or not
-        if(vehicleIsAvailable(vehicle.getVehicleId())) {
-            // Retrieving the User Id , Whom we need to add the rented Car;
-            int userId = getUserId(emailId);
-            String query = UserStatement.RentVehicle();
-            Optional<PreparedStatement> optionalPreparedStatement = getPreparedStatement(query);
-            // Update the Vehicle Id
-            if (optionalPreparedStatement.isPresent()) {
-                try (PreparedStatement preparedStatement = optionalPreparedStatement.get()) {
-                    preparedStatement.setInt(1, vehicle.getVehicleId());
-                    preparedStatement.setInt(2, userId);
-                    preparedStatement.execute();
-                    System.out.println();
-                    System.out.print("---------------------------------------------------------------------------- \n");
-                    System.out.println("User rented the Vehicle "+vehicle.getVehicleName());
-                    System.out.println("---------------------------------------------------------------------------- \n");
-                } catch (SQLException se) {
-                    System.out.println(se.getMessage());
-                }
-                updateVehicleAvailability(vehicle.getVehicleId());
-
+    // The Below Service is used to add the Vehicle to the
+    public static boolean rentTheVehicle(Vehicle vehicle, String emailId) {
+        // Retrieving the User Id , Whom we need to add the rented Car;
+        int userId = getUserId(emailId);
+        String query = UserStatement.RentVehicle();
+        Optional<PreparedStatement> optionalPreparedStatement = getPreparedStatement(query);
+        // Update the VehicleId in the rented_Vehicle Attribute of User model
+        if (optionalPreparedStatement.isPresent()) {
+            try (PreparedStatement preparedStatement = optionalPreparedStatement.get()) {
+                preparedStatement.setInt(1, vehicle.getVehicleId());
+                preparedStatement.setInt(2, userId);
+                // There is a mistake in these lines of code
+                boolean res = preparedStatement.execute();
+                if(res) UserService.updateVehicleAvailability(vehicle.getVehicleId());
+                return res;
+            } catch (SQLException se) {
+                System.out.println(se.getMessage());
             }
+            // The below line of code is to change the availability of the vehicle
         }
+        return false;
     }
-
+    // The Below Service is used to change the availability of the vehicle, After renting
     private static void updateVehicleAvailability(Integer vehicleId){
         String queryToChangeAvailabilityOfVehicle = UserStatement.toChangeTheAvailabilityOfTheVehicle();
         Optional<PreparedStatement> optionalPreparedStatement = getPreparedStatement(queryToChangeAvailabilityOfVehicle);
@@ -256,12 +255,13 @@ public class UserService {
         }
     }
 
-    public static Long returnSecurityDeposit(Vehicle rentedVehicle) {
+    // The Below line of return the security deposit of the particular vehicle with standard
+    public static Long returnSecurityDeposit(Integer vehicleId) {
         String getSecurityDepositOfEachVehicleQuery = UserStatement.getSafetyDepositQuery();
         Optional<PreparedStatement> optionalPreparedStatement = getPreparedStatement(getSecurityDepositOfEachVehicleQuery);
         if(optionalPreparedStatement.isPresent()){
             try(PreparedStatement preparedStatement = optionalPreparedStatement.get()){
-                preparedStatement.setInt(1 , rentedVehicle.getVehicleId());
+                preparedStatement.setInt(1 , vehicleId);
                 ResultSet rs = preparedStatement.executeQuery();
                 rs.next();
                 return rs.getLong(1);
@@ -272,7 +272,8 @@ public class UserService {
         return 0L;
     }
 
-    public static void updateAmount(String emailId , Long securityDeposit) {
+    // The Below Service is used to update the amount of the user wallet after renting the vehicle
+    public static void updateUserWalletAmount(String emailId , Long securityDeposit) {
         int userId = getUserId(emailId);
         String updateAmountOfUserQuery = updatePriceAmountOfUser();
         Optional<PreparedStatement> optionalPreparedStatement = getPreparedStatement(updateAmountOfUserQuery);
@@ -281,6 +282,42 @@ public class UserService {
                 preparedStatement.setLong(1 , securityDeposit);
                 preparedStatement.setInt(2 , userId);
                 preparedStatement.execute();
+            }catch(SQLException se){
+                System.out.println(se.getMessage());
+            }
+        }
+    }
+
+    public static Long getUserWalletAmount(String emailId) {
+        int userId = getUserId(emailId);
+        String updateAmountOfUserQuery = UserStatement.getAmountOfTheUserByUserId();
+        Optional<PreparedStatement> optionalPreparedStatement = getPreparedStatement(updateAmountOfUserQuery);
+        if(optionalPreparedStatement.isPresent()){
+            try(PreparedStatement preparedStatement = optionalPreparedStatement.get()){
+                preparedStatement.setInt(1 , userId);
+                ResultSet rs = preparedStatement.executeQuery();
+                rs.next();
+                return rs.getLong(1);
+            }catch(SQLException se){
+                System.out.println(se.getMessage());
+            }
+        }
+        return 0L;
+    }
+
+    public static void setAmountForUser(String emailId , long amount) {
+        int userId = getUserId(emailId);
+        String setAmountForUserQuery = UserStatement.setAmountForUserQuery();
+        Optional<PreparedStatement> optionalPreparedStatement = getPreparedStatement(setAmountForUserQuery);
+        if(optionalPreparedStatement.isPresent()){
+            try(PreparedStatement preparedStatement = optionalPreparedStatement.get()){
+                preparedStatement.setLong(1 , amount);
+                preparedStatement.setInt(2 , userId);
+                preparedStatement.execute();
+                System.out.println();
+                System.out.print("---------------------------------------------------------------------------- \n");
+                System.out.println("Updated the wallet amount of the user Id : "+userId);
+                System.out.println("---------------------------------------------------------------------------- \n");
             }catch(SQLException se){
                 System.out.println(se.getMessage());
             }
